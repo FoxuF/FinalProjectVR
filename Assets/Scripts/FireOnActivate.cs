@@ -5,9 +5,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class FireOnActivate : MonoBehaviour
 {
-    public GameObject bullet;
-    public Transform spawnPoint;
-    public float fireSpeed = 20.0f;
     public Transform FirePoint;
 
     public GameObject Fire;
@@ -32,16 +29,6 @@ public class FireOnActivate : MonoBehaviour
         
     }
 
-    public void FireBullet(ActivateEventArgs args)
-    {
-        
-        GameObject spawnedBullet = Instantiate(bullet);
-        spawnedBullet.transform.position = spawnPoint.position;
-        spawnedBullet.transform.eulerAngles = spawnPoint.eulerAngles;
-        spawnedBullet.GetComponent<Rigidbody>().velocity = spawnPoint.forward * fireSpeed;
-        Destroy(spawnedBullet, 5);
-    }
-    
     public void Shooting(ActivateEventArgs args)
     {
         
@@ -49,29 +36,38 @@ public class FireOnActivate : MonoBehaviour
         if (canFire)
         {
             canFire = false;
+            GameObject a = Instantiate(Fire, FirePoint.position, Quaternion.identity); 
+            audioPlayer.Play();
             if (Physics.Raycast(FirePoint.position, transform.TransformDirection(Vector3.forward), out hit, 100))
             {
                 
                 Debug.DrawRay(FirePoint.position, transform.TransformDirection(Vector3.forward) * hit.distance,
                     Color.yellow);
 
-                GameObject a = Instantiate(Fire, FirePoint.position, Quaternion.identity);
-                audioPlayer.Play();
+                
+               
                 GameObject b = Instantiate(HitPoint, hit.point, Quaternion.identity);
 
                 Destroy(a, 1);
                 Destroy(b, 1);
                 Enemy enemy = hit.transform.GetComponent<Enemy>();
-
+                Hostage hostage = hit.transform.GetComponent<Hostage>();
                 if (enemy != null)
                 {
-                    enemy.Damage(2);
+                    enemy.Damage(1);
+                    Player.instance.AddScore(100);
                 }
-                StartCoroutine(FireRateHandler());
+                if (hostage != null)
+                {
+                    hostage.Damage(1);
+                    Player.instance.ReduceScore(100);
+                }
+                
             }
 
-            
+            StartCoroutine(FireRateHandler());
         }
+        
     }
     
     IEnumerator FireRateHandler()
