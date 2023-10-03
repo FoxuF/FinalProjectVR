@@ -38,7 +38,7 @@ public class FireOnActivate : MonoBehaviour
             canFire = false;
             GameObject a = Instantiate(Fire, FirePoint.position, Quaternion.identity); 
             audioPlayer.Play();
-            if (Physics.Raycast(FirePoint.position, transform.TransformDirection(Vector3.forward), out hit, 100))
+            if (Physics.Raycast(FirePoint.position, transform.TransformDirection(Vector3.forward), out hit, 200))
             {
                 
                 Debug.DrawRay(FirePoint.position, transform.TransformDirection(Vector3.forward) * hit.distance,
@@ -64,8 +64,9 @@ public class FireOnActivate : MonoBehaviour
                 }
                 
             }
-
+            canFire = true;
             StartCoroutine(FireRateHandler());
+            
         }
         
     }

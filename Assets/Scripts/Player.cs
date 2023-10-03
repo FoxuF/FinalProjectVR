@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public int health = 3;
+    public static int health = 50;
     public uint score = 0;
     public static Player instance { get; private set; }
 
@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        health = 50;
     }
 
     // Update is called once per frame
@@ -33,11 +33,11 @@ public class Player : MonoBehaviour
     public void ReduceScore(int scoreReduce)
     {
         score -= 100;
-        if (score < 0)
+        if (score <= 0 || score > 37000)
         {
             score = 0;
         }
-        Debug.Log("Huvos");
+        Debug.Log("Huevos");
     }
     public void AddScore(int scoreAdd)
     {
